@@ -1,3 +1,60 @@
+> [!IMPORTANT]
+> **This is a fork of [Nezreka/SoulSync](https://github.com/Nezreka/SoulSync).**
+> Everything below this block is upstream's own README, unchanged. If you are not me, you
+> almost certainly want [the upstream image](https://github.com/Nezreka/SoulSync).
+> This fork exists to run one household's music pipeline and to carry two open PRs until they ship.
+
+## What this fork adds
+
+Nothing that is meant to stay. Every change here is an upstream PR, carried until it merges.
+The Origin column says where each one stands upstream.
+
+### Carried from open upstream PRs
+
+| Change | Origin |
+|---|---|
+| AcoustID scanner: opt-in `skip_verified` setting. Verified tracks are skipped unless the file changed since the last clean run. Off by default, no schema change | This fork, open upstream as [#1694](https://github.com/Nezreka/SoulSync/pull/1694) |
+| API keys get a scope, `read` or `admin`. Read keys can only GET a named set of `/api/v1` routes (settings, key lists, profiles and the like are closed to them), and a test walks every GET route to catch ones that write. Keys without a scope stay admin | This fork, open upstream as [#1695](https://github.com/Nezreka/SoulSync/pull/1695), from [#1586](https://github.com/Nezreka/SoulSync/issues/1586) |
+
+## Upstream first
+
+Anything here belongs upstream and goes there rather than living in this fork. Thirteen PRs
+have merged so far, two are open.
+
+Merged:
+
+- [#1676](https://github.com/Nezreka/SoulSync/pull/1676) an API key can manage invites when login mode is on
+- [#1657](https://github.com/Nezreka/SoulSync/pull/1657) a failed Spotify playlist fetch no longer refreshes a mirror to empty
+- [#1597](https://github.com/Nezreka/SoulSync/pull/1597) one implementation behind both API key route sets
+- [#1587](https://github.com/Nezreka/SoulSync/pull/1587) one way to read and match an API key, and `X-API-Key` accepted
+- [#1534](https://github.com/Nezreka/SoulSync/pull/1534), [#1533](https://github.com/Nezreka/SoulSync/pull/1533), [#1527](https://github.com/Nezreka/SoulSync/pull/1527) build: webui builder on the build platform, apt packages and Deno before the venv copy, tests and docs kept out of the image
+- [#1526](https://github.com/Nezreka/SoulSync/pull/1526), [#1525](https://github.com/Nezreka/SoulSync/pull/1525), [#1523](https://github.com/Nezreka/SoulSync/pull/1523) CI: cancel superseded runs, `pytest -n auto`, a temp database per xdist worker
+- [#1524](https://github.com/Nezreka/SoulSync/pull/1524), [#1501](https://github.com/Nezreka/SoulSync/pull/1501) slskd cleanup scoped to this client's own transfers and searches
+- [#1282](https://github.com/Nezreka/SoulSync/pull/1282) the commit SHA moved below the heavy runtime layers
+
+Open:
+
+- [#1694](https://github.com/Nezreka/SoulSync/pull/1694) AcoustID `skip_verified`
+- [#1695](https://github.com/Nezreka/SoulSync/pull/1695) read-only API keys
+- [#1586](https://github.com/Nezreka/SoulSync/issues/1586) the issue behind #1695
+
+Nothing stays in the fork for good. The overlay image goes the release after both PRs merge.
+
+## How it is maintained
+
+There is no fork-only branch stack. Each open PR is its own branch off upstream `dev`
+(`feat/acoustid-skip-verified`, `feat/api-key-read-scope`). A local branch,
+`bake/3.5.4-prs`, is the latest upstream release plus those two, cherry-picked.
+
+The image is a thin overlay: `FROM boulderbadgedad/soulsync:3.5.4` plus the files the two PRs
+change, built on the host that runs it and not published anywhere. Rollback is the stock
+image. Do not roll back to a build older than #1695 while a read key exists, because older
+builds ignore `scope` and treat the key as admin.
+
+Licence and copyright are upstream's, unchanged.
+
+---
+
 <p align="center">
   <img src="./assets/trans.png" alt="SoulSync" width="420">
 </p>
