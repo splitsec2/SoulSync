@@ -18,11 +18,12 @@ includes it. The Origin column says where each one stands upstream.
 
 ## Upstream first
 
-Anything here belongs upstream and goes there rather than living in this fork. Sixteen PRs
-have merged so far, one is open.
+Anything here belongs upstream and goes there rather than living in this fork. Seventeen PRs
+have merged so far, none are open.
 
 Merged:
 
+- [#1708](https://github.com/Nezreka/SoulSync/pull/1708) an opt-in memory of empty lookups, used by the Cover Art Filler so it stops asking the same servers the same question every run (in `dev`, not in the image)
 - [#1707](https://github.com/Nezreka/SoulSync/pull/1707) a repair run cut short by the worker stopping is recorded as stopped, not completed
 - [#1695](https://github.com/Nezreka/SoulSync/pull/1695) read-only API keys (in `dev`, carried above)
 - [#1694](https://github.com/Nezreka/SoulSync/pull/1694) AcoustID `skip_verified` (in `dev`, carried above)
@@ -37,7 +38,6 @@ Merged:
 
 Open:
 
-- [#1708](https://github.com/Nezreka/SoulSync/pull/1708) an opt-in memory of empty lookups, used by the Cover Art Filler so it stops asking the same servers the same question every run. Not in the image yet
 - [#1586](https://github.com/Nezreka/SoulSync/issues/1586) the issue behind #1695, still open
 
 Nothing stays in the fork for good. The overlay image goes with the first release that
@@ -46,7 +46,7 @@ includes both carried PRs.
 ## How it is maintained
 
 There is no fork-only branch stack. Each PR is its own branch off upstream `dev`
-(`feat/acoustid-skip-verified`, `feat/api-key-read-scope`, `feat/empty-lookup-memory`). A
+(`feat/acoustid-skip-verified`, `feat/api-key-read-scope`). A
 local branch, `bake/3.5.4-prs`, is the latest upstream release plus the two carried PRs,
 cherry-picked.
 
