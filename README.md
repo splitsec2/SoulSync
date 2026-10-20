@@ -2,13 +2,19 @@
 > **This is a fork of [Nezreka/SoulSync](https://github.com/Nezreka/SoulSync).**
 > Everything below this block is upstream's own README, unchanged. If you are not me, you
 > almost certainly want [the upstream image](https://github.com/Nezreka/SoulSync).
-> This fork exists to run one household's music pipeline. It carries nothing right now.
+> This fork exists to run one household's music pipeline. It carries only dependency updates right now.
 
 ## What this fork adds
 
-Nothing that is meant to stay. A change is built here first, sent upstream, and carried
-until a release includes it. The Origin column says where each one stands. Everything so
-far has merged, and the household runs the stock image again.
+No feature changes. A change is built here first, sent upstream, and carried until a
+release includes it. The Origin column says where each one stands. Every change so far has
+merged, and the household runs the stock image.
+
+### What it carries now
+
+| Change | Origin |
+|---|---|
+| Dependency updates: a pip group of 3 packages and an npm group of 8 | Dependabot on this fork ([#3](https://github.com/splitsec2/SoulSync/pull/3), [#4](https://github.com/splitsec2/SoulSync/pull/4)), fork only, not sent upstream |
 
 ### History of what this fork carried
 
