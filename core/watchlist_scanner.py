@@ -2979,7 +2979,7 @@ class WatchlistScanner:
                     # When allow_duplicates is on, skip album hint so we get title+artist matches only
                     search_album = None if allow_duplicates else album_name
                     from core.downloads.atomic_album_publish import contains_staging_segment
-                    db_track, confidence = self.database.check_track_exists(query_title, artist_name, confidence_threshold=0.7, server_source=active_server, album=search_album)
+                    db_track, confidence = self.database.check_track_exists(query_title, artist_name, confidence_threshold=0.7, server_source=active_server, album=search_album, include_downloads=True)
 
                     if db_track and confidence >= 0.7:
                         # #1289: a row whose file is still in atomic-publish
@@ -3913,7 +3913,7 @@ class WatchlistScanner:
             import traceback
             traceback.print_exc()
 
-    def update_discovery_pool_incremental(self, profile_id: int = 1):
+    def update_discovery_pool_incremental(self, profile_id: int = 1, force: bool = False):
         """
         Lightweight incremental update for discovery pool - runs every 6 hours.
 
@@ -3921,15 +3921,23 @@ class WatchlistScanner:
         - Much faster than full populate_discovery_pool (only checks watchlist, not similar artists)
         - Only fetches latest 5 releases per artist
         - Only adds tracks from releases in last 7 days
-        - Respects 6-hour cooldown to avoid over-polling
+        - Respects 6-hour cooldown to avoid over-polling (unless forced)
+
+        ``force=True`` bypasses the cooldown: a manual run (an automation's
+        Run Now press, #1719) is the user explicitly asking for a refresh
+        right now — e.g. so changed discovery settings take effect — so
+        skipping it as "recently updated" defeats the press. Scheduled and
+        event-triggered runs keep the cooldown.
         """
         try:
             from datetime import datetime, timedelta
 
             # Check if we should run (prevents over-polling Spotify)
-            if not self.database.should_populate_discovery_pool(hours_threshold=6, profile_id=profile_id):
+            if not force and not self.database.should_populate_discovery_pool(hours_threshold=6, profile_id=profile_id):
                 logger.info("Discovery pool was updated recently (< 6 hours ago). Skipping incremental update.")
                 return
+            if force:
+                logger.info("Forced incremental discovery pool update — bypassing the 6-hour cooldown.")
 
             logger.info("Starting incremental discovery pool update (watchlist artists only)...")
 
