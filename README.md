@@ -21,11 +21,13 @@ far has merged, and the household runs the stock image again.
 
 ## Upstream first
 
-Anything here belongs upstream and goes there rather than living in this fork. Seventeen
-PRs have merged so far, none are open.
+Anything here belongs upstream and goes there rather than living in this fork. Twenty-five
+PRs have merged so far, one is open.
 
 Merged:
 
+- [#1762](https://github.com/Nezreka/SoulSync/pull/1762) the watchlist add from a source artist page sends its source, so View Discography opens the right artist ([#1761](https://github.com/Nezreka/SoulSync/issues/1761)), in 3.5.8
+- [#1760](https://github.com/Nezreka/SoulSync/pull/1760), [#1759](https://github.com/Nezreka/SoulSync/pull/1759), [#1758](https://github.com/Nezreka/SoulSync/pull/1758), [#1757](https://github.com/Nezreka/SoulSync/pull/1757), [#1752](https://github.com/Nezreka/SoulSync/pull/1752), [#1751](https://github.com/Nezreka/SoulSync/pull/1751), [#1750](https://github.com/Nezreka/SoulSync/pull/1750) media servers described once and read from that description: a descriptor per server, one item model, declared capabilities and hooks, per-profile client resolution, artwork and the setup wizard, in 3.5.8
 - [#1708](https://github.com/Nezreka/SoulSync/pull/1708) an opt-in memory of empty lookups for the Cover Art Filler
 - [#1707](https://github.com/Nezreka/SoulSync/pull/1707) a repair run cut short by the worker stopping is recorded as stopped, not completed
 - [#1695](https://github.com/Nezreka/SoulSync/pull/1695) read-only API keys
@@ -41,7 +43,7 @@ Merged:
 
 Open:
 
-- [#1586](https://github.com/Nezreka/SoulSync/issues/1586) the issue behind #1695, still open
+- [#1787](https://github.com/Nezreka/SoulSync/pull/1787) Music Assistant as a fifth media server ([#1050](https://github.com/Nezreka/SoulSync/issues/1050))
 
 ## How it is maintained
 
