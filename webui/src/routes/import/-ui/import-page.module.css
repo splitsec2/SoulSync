@@ -140,13 +140,7 @@
 }
 
 .iconButton[aria-busy='true'] svg {
-  animation: spin 0.9s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  animation: global(spin) 0.9s linear infinite;
 }
 
 /* ── toolbar: filter pills + bulk actions ─────────────────────── */
@@ -537,6 +531,14 @@
   color: var(--white-a45);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+}
+
+/* what an import did with one track, in the "what happened" list */
+.outcomePill {
+  height: 18px;
+  padding: 0 7px;
+  font-size: 10.5px;
+  justify-self: end;
 }
 
 .empty {

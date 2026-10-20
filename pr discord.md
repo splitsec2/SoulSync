@@ -1,17 +1,13 @@
-**SoulSync 3.5.5 is out** :musical_note:
+**SoulSync 3.5.8 is out** :musical_note:
 
-Your own playlists grow up: play, shuffle and queue on every playlist, a Liked Songs heart in the add-to-playlist picker, ticks for playlists that already have the song, add songs and sort from inside a playlist, and a made-over detail view. Mirrors can append or reconcile per playlist or per pipeline instead of one global mode (thanks @Tacobell444).
+Request Lists are a new tab on the Sync page for playlists that only download. Copy any playlist there and syncing it grabs what's missing without building a playlist on your media server. Spotify lists can opt in to removing tracks you now own from the Spotify playlist, and only ID-matched tracks are ever removed.
 
-Songs that aren't in your library can play their Deezer 30s preview instead (thanks @cremonies). Dashboard rail cards get play, queue and add-to-playlist buttons, and the mix modal is redesigned.
+Playlists now re-sync on their own once their downloads land and the database update runs, so new tracks reach your server playlist right away. The Sync Playlist automation can also sync every mirrored playlist at once.
 
-A big speed pass: stale SQLite planner stats made a watchlist scan pay 1.4 s per missing track (now 32 ms), plus missing indexes on file paths and lowercase titles, faster enrichment workers and stats.
+The dashboard shows your Discover quick mixes, chat uploads get a preview step with captions and inline players, and audiobooks fire automation triggers like Import Complete (thanks @SimpleSimonLA).
 
-Read-only API keys (thanks @splitsec2). Subtitles reach Bazarr parity with a missing subtitles job on the tools page.
+Fixes: members stop getting banned by CrowdSec on their first visit, and deleting a profile no longer strands its browsers (thanks @PapaBearDoes). Downloads > Review stops freezing on a big queue, and artist letter folders stop scattering (thanks @QT3496). "No track picked" imports use the file's own tags (thanks @edy80), re-identify fixes and lost tracks come back (thanks @kevin2xk), and the watchlist opens the right artist (thanks @splitsec2).
 
-Downloads can't land untagged anymore, and a repair job flags the ones that did. The next quality tier gets a shot when the top one won't start (thanks @javiavid). Standalone full refresh stops dropping tracks to id collisions (thanks @rijndael86).
-
-Matching: featuring-credit titles match on MusicBrainz (thanks @pm-melo), AcoustID accepts a recording under another release's title (thanks @zikasak), reorganize settles where it placed an album (thanks @rhyst), and discography backfill rotates through the whole library (thanks @QT3496).
-
-Also: pipeline syncs respect wishlist skip (thanks @Tacobell444), every connection gets a test button, similar artists stop storing namesakes, and another phone layout batch.
+Under the hood: one descriptor per media server (thanks @splitsec2), about 12,000 lines of dead CSS gone (thanks @Thundernerd) and the replaced vanilla pages retired (thanks @AnonymousMorris).
 
 Full notes on GitHub.

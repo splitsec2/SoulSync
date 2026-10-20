@@ -401,9 +401,14 @@ the standard page object. Each artist includes full metadata: ids, artwork
 URLs, genres (array of strings), summary/style/mood/label, \`server_source\`,
 ISO-8601 \`created_at\`/\`updated_at\`, cross-install \`soul_id\`, external
 provider IDs (\`musicbrainz_id\`, \`spotify_artist_id\`, \`itunes_artist_id\`,
-\`audiodb_id\`, \`deezer_id\`, \`tidal_id\`, \`qobuz_id\`, \`genius_id\`), per-provider
+\`audiodb_id\`, \`deezer_id\`, \`tidal_id\`, \`qobuz_id\`, \`genius_id\`, \`discogs_id\`,
+\`amazon_id\`, \`jiosaavn_id\`), per-provider
 match statuses and last-attempted timestamps, Last.fm stats, and Genius
-metadata. Enriched queries may also add \`album_count\`, \`track_count\`,
+metadata. Artists also carry \`aliases\` (array of alternate names),
+Discogs enrichment (\`discogs_bio\`, plus \`discogs_members\` and \`discogs_urls\`
+as arrays), \`soul_id_path\` (how the \`soul_id\` was derived: \`canonical\`,
+\`album\`, or \`name\`), and the \`art_locked\`/\`genres_locked\` flags (boolean
+or null). Enriched queries may also add \`album_count\`, \`track_count\`,
 \`is_watched\`, and \`image_url\`.
 
 \`\`\`json
@@ -412,7 +417,7 @@ metadata. Enriched queries may also add \`album_count\`, \`track_count\`,
   "data": {
     "artists": [
       {
-        "id": 42,
+        "id": "42",
         "name": "Miles Davis",
         "thumb_url": "https://image-cdn.example/abc123.jpg",
         "banner_url": null,
@@ -468,7 +473,7 @@ album list embedded.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| \`artist_id\` | int | Yes | SoulSync artist ID |
+| \`artist_id\` | string | Yes | SoulSync artist ID. IDs are text: usually numeric, but standalone libraries may use opaque IDs containing \`::soulsync\`. Pass the \`id\` value verbatim from a list or lookup response |
 
 **Query parameters**
 
@@ -486,8 +491,8 @@ album list embedded.
 {
   "success": true,
   "data": {
-    "artist": { "id": 42, "name": "Miles Davis", "...": "..." },
-    "albums": [ { "id": 7, "title": "Kind of Blue", "year": 1959, "...": "..." } ]
+    "artist": { "id": "42", "name": "Miles Davis", "...": "..." },
+    "albums": [ { "id": "7", "title": "Kind of Blue", "year": 1959, "...": "..." } ]
   },
   "error": null,
   "pagination": null
@@ -498,7 +503,6 @@ album list embedded.
 
 | Code | Status | When |
 |------|--------|------|
-| \`BAD_REQUEST\` | 400 | \`artist_id\` is not an integer |
 | \`NOT_FOUND\` | 404 | No artist with that ID |
 | \`LIBRARY_ERROR\` | 500 | Database or unexpected failure |
 
@@ -520,7 +524,7 @@ every album is returned in one response.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| \`artist_id\` | int | Yes | SoulSync artist ID |
+| \`artist_id\` | string | Yes | SoulSync artist ID (text; may be opaque, see the artist detail endpoint) |
 
 **Query parameters**
 
@@ -537,7 +541,6 @@ every album is returned in one response.
 
 | Code | Status | When |
 |------|--------|------|
-| \`BAD_REQUEST\` | 400 | \`artist_id\` is not an integer |
 | \`LIBRARY_ERROR\` | 500 | Database or unexpected failure |
 
 **Notes**
@@ -565,7 +568,7 @@ pagination.
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
 | \`search\` | string | No | \`""\` | Substring filter on album title |
-| \`artist_id\` | int | No | — | Filter to one artist's albums |
+| \`artist_id\` | string | No | — | Filter to one artist's albums (text ID; may be opaque). An empty value means no filter |
 | \`year\` | int | No | — | Filter by release year |
 | \`page\` | int | No | \`1\` | Page number (minimum 1; invalid values fall back to 1) |
 | \`limit\` | int | No | \`50\` | Results per page (1–200; clamped to 200; invalid values fall back to 50) |
@@ -580,8 +583,17 @@ the standard page object. Each album includes \`id\`, \`artist_id\`, \`title\`,
 \`server_source\`, ISO-8601 \`created_at\`/\`updated_at\`, \`upc\`, \`copyright\`,
 cross-install \`soul_id\`, external provider IDs (\`musicbrainz_release_id\`,
 \`spotify_album_id\`, \`itunes_album_id\`, \`audiodb_id\`, \`deezer_id\`, \`tidal_id\`,
-\`qobuz_id\`), per-provider match statuses and last-attempted timestamps, and
-Last.fm stats.
+\`qobuz_id\`, \`discogs_id\`, \`amazon_id\`, \`jiosaavn_id\`, \`bandcamp_id\`),
+per-provider match statuses and last-attempted timestamps, and
+Last.fm stats. Albums also carry a full \`release_date\` (when known) next to
+\`year\`, Discogs release data (\`discogs_genres\` and \`discogs_styles\` as
+arrays, \`discogs_label\`, \`discogs_catno\`, \`discogs_country\`,
+\`discogs_rating\`, \`discogs_rating_count\`), Bandcamp data (\`bandcamp_url\`,
+\`bandcamp_tags\` as an array, \`bandcamp_label\`), the canonical-release
+selection (\`canonical_source\`, \`canonical_album_id\`, \`canonical_score\`,
+\`canonical_resolved_at\`, \`canonical_locked\`, plus \`api_track_count\` and
+\`canonical_track_count\` alongside the observed \`track_count\`), and the
+\`art_locked\`/\`genres_locked\`/\`metadata_locked\` flags (boolean or null).
 
 \`\`\`json
 {
@@ -589,8 +601,8 @@ Last.fm stats.
   "data": {
     "albums": [
       {
-        "id": 7,
-        "artist_id": 42,
+        "id": "7",
+        "artist_id": "42",
         "title": "Kind of Blue",
         "year": 1959,
         "thumb_url": "https://image-cdn.example/abc123.jpg",
@@ -617,7 +629,7 @@ Last.fm stats.
 
 | Code | Status | When |
 |------|--------|------|
-| \`BAD_REQUEST\` | 400 | \`artist_id\` or \`year\` is not an integer |
+| \`BAD_REQUEST\` | 400 | \`year\` is not an integer |
 | \`LIBRARY_ERROR\` | 500 | Database or unexpected failure |
 
 **Example**
@@ -638,7 +650,7 @@ list embedded.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| \`album_id\` | int | Yes | SoulSync album ID |
+| \`album_id\` | string | Yes | SoulSync album ID (text; may be opaque, see the artist detail endpoint) |
 
 **Query parameters**
 
@@ -657,7 +669,6 @@ list embedded.
 
 | Code | Status | When |
 |------|--------|------|
-| \`BAD_REQUEST\` | 400 | \`album_id\` is not an integer |
 | \`NOT_FOUND\` | 404 | No album with that ID |
 | \`LIBRARY_ERROR\` | 500 | Database or unexpected failure |
 
@@ -679,7 +690,7 @@ every track is returned in one response.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| \`album_id\` | int | Yes | SoulSync album ID |
+| \`album_id\` | string | Yes | SoulSync album ID (text; may be opaque, see the artist detail endpoint) |
 
 **Query parameters**
 
@@ -696,16 +707,23 @@ every track is returned in one response.
 ISO-8601 \`created_at\`/\`updated_at\`, \`isrc\`, \`copyright\`, cross-install
 \`soul_id\` and \`album_soul_id\`, external provider IDs
 (\`musicbrainz_recording_id\`, \`spotify_track_id\`, \`itunes_track_id\`,
-\`audiodb_id\`, \`deezer_id\`, \`tidal_id\`, \`qobuz_id\`, \`genius_id\`),
+\`audiodb_id\`, \`deezer_id\`, \`tidal_id\`, \`qobuz_id\`, \`genius_id\`,
+\`amazon_id\`, \`jiosaavn_id\`, \`bandcamp_id\`),
 per-provider match statuses and last-attempted timestamps, Last.fm stats,
-and Genius metadata. Joined queries may also add \`artist_name\` and
+and Genius metadata. Tracks also carry \`disc_number\`, a per-track \`year\`,
+\`track_artist\` (the performer credit, e.g. on compilations),
+\`recording_disambiguation\` (the MusicBrainz recording comment that
+distinguishes versions, such as live or acoustic), \`server_path\` (the path
+the media server reported) alongside \`file_path\` (SoulSync's local path),
+\`file_size\` in bytes, Bandcamp data (\`bandcamp_url\`, \`bandcamp_tags\`,
+\`bandcamp_label\`), and the \`metadata_locked\` flag (boolean or null).
+Joined queries may also add \`artist_name\` and
 \`album_title\`. \`pagination\` is \`null\`.
 
 **Errors**
 
 | Code | Status | When |
 |------|--------|------|
-| \`BAD_REQUEST\` | 400 | \`album_id\` is not an integer |
 | \`LIBRARY_ERROR\` | 500 | Database or unexpected failure |
 
 **Notes**
@@ -729,7 +747,7 @@ Get a single track by its SoulSync ID, with full metadata.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| \`track_id\` | int | Yes | SoulSync track ID |
+| \`track_id\` | string | Yes | SoulSync track ID (text; may be opaque, see the artist detail endpoint) |
 
 **Query parameters**
 
@@ -747,7 +765,6 @@ Get a single track by its SoulSync ID, with full metadata.
 
 | Code | Status | When |
 |------|--------|------|
-| \`BAD_REQUEST\` | 400 | \`track_id\` is not an integer |
 | \`NOT_FOUND\` | 404 | No track with that ID |
 | \`LIBRARY_ERROR\` | 500 | Database or unexpected failure |
 
@@ -872,7 +889,7 @@ echoes the requested type. \`pagination\` is \`null\`.
 {
   "success": true,
   "data": {
-    "items": [ { "id": 99, "title": "New Release", "year": 2026, "...": "..." } ],
+    "items": [ { "id": "99", "title": "New Release", "year": 2026, "...": "..." } ],
     "type": "albums"
   },
   "error": null,
@@ -907,7 +924,7 @@ SoulSync record. All three parameters are required.
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
 | \`type\` | string | Yes | — | \`"artist"\`, \`"album"\`, or \`"track"\` (singular) |
-| \`provider\` | string | Yes | — | \`"spotify"\`, \`"musicbrainz"\`, \`"itunes"\`, \`"deezer"\`, \`"audiodb"\`, \`"tidal"\`, \`"qobuz"\`, or \`"genius"\` |
+| \`provider\` | string | Yes | — | \`"spotify"\`, \`"musicbrainz"\`, \`"itunes"\`, \`"deezer"\`, \`"audiodb"\`, \`"tidal"\`, \`"qobuz"\`, \`"genius"\`, \`"discogs"\`, \`"amazon"\`, \`"jiosaavn"\`, or \`"bandcamp"\` |
 | \`id\` | string | Yes | — | The external ID value |
 | \`fields\` | string | No | — | Comma-separated field names to keep in the returned object |
 
@@ -921,7 +938,7 @@ as the corresponding list endpoints. \`pagination\` is \`null\`.
 {
   "success": true,
   "data": {
-    "album": { "id": 7, "title": "Kind of Blue", "year": 1959, "spotify_album_id": "...", "...": "..." }
+    "album": { "id": "7", "title": "Kind of Blue", "year": 1959, "spotify_album_id": "...", "...": "..." }
   },
   "error": null,
   "pagination": null
@@ -932,7 +949,7 @@ as the corresponding list endpoints. \`pagination\` is \`null\`.
 
 | Code | Status | When |
 |------|--------|------|
-| \`BAD_REQUEST\` | 400 | Missing \`type\`, \`provider\`, or \`id\`; unknown \`type\`; unknown \`provider\`; or \`provider=genius\` with \`type=album\` (Genius IDs are not stored for albums) |
+| \`BAD_REQUEST\` | 400 | Missing \`type\`, \`provider\`, or \`id\`; unknown \`type\`; unknown \`provider\`; or an unsupported provider/type combination: \`provider=genius\` with \`type=album\` (Genius IDs are not stored for albums), \`provider=bandcamp\` with \`type=artist\` (Bandcamp IDs are not stored for artists), or \`provider=discogs\` with \`type=track\` (Discogs IDs are not stored for tracks) |
 | \`NOT_FOUND\` | 404 | No library entity matches that provider ID |
 | \`LIBRARY_ERROR\` | 500 | Database or unexpected failure |
 
@@ -4348,22 +4365,90 @@ curl -H "Authorization: Bearer $API_KEY" \\
   http://localhost:8008/api/v1/video/scan/status
 \`\`\`
 
-### \`GET /api/v1/video/downloads\`
+### \`GET /api/v1/video/stats\`
 
-The active video download queue (also nudges the download monitor to make
-sure it is running).
+Everything a dashboard widget needs in one call: what is in the library, the
+database, where the download queue stands, and the wishlist.
 
-**Response**
+**Response** — \`data\`:
 
-\`data\` is \`{"downloads": [...]}\` — one object per active download row
-(progress, status, source, media ids, and annotated upgrade-watch/pack
-info where applicable).
+| Field | Type | Description |
+|-------|------|-------------|
+| \`server\` | string/null | The video server the library counts are scoped to (\`plex\` \| \`jellyfin\`). |
+| \`library.movies\` | integer | Movies in the library. |
+| \`library.shows\` | integer | Shows in the library. |
+| \`library.episodes\` | integer | Episodes with a file on disk. |
+| \`library.episodes_missing\` | integer | Monitored episodes that have aired but have no file. |
+| \`library.size_bytes\` | integer | Total size of the library's files. |
+| \`database.size_mb\` | number/null | Video database file size. |
+| \`database.last_update\` | string/null | Last change to a library row, ISO UTC. |
+| \`database.last_scan\` | string/null | Start of the last full library scan, ISO UTC. |
+| \`downloads.active\` | integer | Rows queued, searching, downloading or importing. |
+| \`downloads.failed\` | integer | Rows that failed to download or import. |
+| \`downloads.completed\` | integer | Completed rows still on the downloads list. |
+| \`downloads.cancelled\` | integer | Cancelled rows. |
+| \`downloads.by_status\` | object | Count per raw status. |
+| \`downloads.speed_bps\` | integer | Combined speed of everything downloading right now. |
+| \`downloads.completed_all_time\` | integer | Completed grabs in the permanent history (survives clearing the list). |
+| \`wishlist.movies\` / \`episodes\` / \`videos\` / \`total\` | integer | Wishlist counts (\`videos\` is YouTube). |
+
+\`\`\`json
+{
+  "success": true,
+  "data": {
+    "server": "plex",
+    "library": {"movies": 1250, "shows": 85, "episodes": 6520,
+                "episodes_missing": 41, "size_bytes": 18734029840384},
+    "database": {"size_mb": 96.4, "last_update": "2026-10-16T17:49:14+00:00",
+                 "last_scan": "2026-10-16T17:48:54+00:00"},
+    "downloads": {"active": 3, "failed": 1, "completed": 17, "cancelled": 0,
+                  "by_status": {"queued": 1, "searching": 0, "downloading": 2, "importing": 0,
+                                "failed": 1, "import_failed": 0, "completed": 17, "cancelled": 0},
+                  "speed_bps": 12500000, "completed_all_time": 412},
+    "wishlist": {"movies": 12, "episodes": 40, "videos": 1, "total": 53}
+  },
+  "error": null,
+  "pagination": null
+}
+\`\`\`
 
 **Example**
 
 \`\`\`bash
 curl -H "Authorization: Bearer $API_KEY" \\
-  http://localhost:8008/api/v1/video/downloads
+  http://localhost:8008/api/v1/video/stats
+\`\`\`
+
+**Errors:** \`503 NOT_AVAILABLE\` when the video side is off, \`500 VIDEO_ERROR\`.
+
+### \`GET /api/v1/video/downloads\`
+
+The video downloads list, active rows first then newest (the latest 100).
+Also nudges the download monitor to make sure it is running.
+
+**Query parameters**
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| status | string | no | — | One status or a comma list: \`queued\`, \`searching\`, \`downloading\`, \`importing\`, \`failed\`, \`import_failed\`, \`completed\`, \`cancelled\`. \`active\` and \`failed\` also work as shorthand for their groups. |
+
+**Response**
+
+\`data\` is \`{"downloads": [...]}\` — one object per download row
+(progress, status, source, media ids, and annotated upgrade-watch/pack
+info where applicable). With \`status\` it also carries \`count\`.
+
+**Errors**
+
+| Status | Code | When |
+|--------|------|------|
+| 400 | \`BAD_REQUEST\` | \`status\` has a word that is not a known status. |
+
+**Example**
+
+\`\`\`bash
+curl -H "Authorization: Bearer $API_KEY" \\
+  "http://localhost:8008/api/v1/video/downloads?status=downloading"
 \`\`\`
 
 ### \`GET /api/v1/video/downloads/status\`

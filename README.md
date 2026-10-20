@@ -2,13 +2,19 @@
 > **This is a fork of [Nezreka/SoulSync](https://github.com/Nezreka/SoulSync).**
 > Everything below this block is upstream's own README, unchanged. If you are not me, you
 > almost certainly want [the upstream image](https://github.com/Nezreka/SoulSync).
-> This fork exists to run one household's music pipeline. It carries nothing right now.
+> This fork exists to run one household's music pipeline. It carries only dependency updates right now.
 
 ## What this fork adds
 
-Nothing that is meant to stay. A change is built here first, sent upstream, and carried
-until a release includes it. The Origin column says where each one stands. Everything so
-far has merged, and the household runs the stock image again.
+No feature changes. A change is built here first, sent upstream, and carried until a
+release includes it. The Origin column says where each one stands. Every change so far has
+merged, and the household runs the stock image.
+
+### What it carries now
+
+| Change | Origin |
+|---|---|
+| Dependency updates: a pip group of 3 packages and an npm group of 8 | Dependabot on this fork ([#3](https://github.com/splitsec2/SoulSync/pull/3), [#4](https://github.com/splitsec2/SoulSync/pull/4)), fork only, not sent upstream |
 
 ### History of what this fork carried
 
@@ -21,11 +27,13 @@ far has merged, and the household runs the stock image again.
 
 ## Upstream first
 
-Anything here belongs upstream and goes there rather than living in this fork. Seventeen
-PRs have merged so far, none are open.
+Anything here belongs upstream and goes there rather than living in this fork. Twenty-five
+PRs have merged so far, one is open.
 
 Merged:
 
+- [#1762](https://github.com/Nezreka/SoulSync/pull/1762) the watchlist add from a source artist page sends its source, so View Discography opens the right artist ([#1761](https://github.com/Nezreka/SoulSync/issues/1761)), in 3.5.8
+- [#1760](https://github.com/Nezreka/SoulSync/pull/1760), [#1759](https://github.com/Nezreka/SoulSync/pull/1759), [#1758](https://github.com/Nezreka/SoulSync/pull/1758), [#1757](https://github.com/Nezreka/SoulSync/pull/1757), [#1752](https://github.com/Nezreka/SoulSync/pull/1752), [#1751](https://github.com/Nezreka/SoulSync/pull/1751), [#1750](https://github.com/Nezreka/SoulSync/pull/1750) media servers described once and read from that description: a descriptor per server, one item model, declared capabilities and hooks, per-profile client resolution, artwork and the setup wizard, in 3.5.8
 - [#1708](https://github.com/Nezreka/SoulSync/pull/1708) an opt-in memory of empty lookups for the Cover Art Filler
 - [#1707](https://github.com/Nezreka/SoulSync/pull/1707) a repair run cut short by the worker stopping is recorded as stopped, not completed
 - [#1695](https://github.com/Nezreka/SoulSync/pull/1695) read-only API keys
@@ -41,7 +49,7 @@ Merged:
 
 Open:
 
-- [#1586](https://github.com/Nezreka/SoulSync/issues/1586) the issue behind #1695, still open
+- [#1787](https://github.com/Nezreka/SoulSync/pull/1787) Music Assistant as a fifth media server ([#1050](https://github.com/Nezreka/SoulSync/issues/1050))
 
 ## How it is maintained
 
@@ -321,7 +329,7 @@ A complete video side with its own database, pages and pipeline. Switch sides fr
 - **Poster Manager** for TMDB posters, including textless ones.
 - **Maintenance jobs**: broken files, duplicates, naming, quality upgrades, watched cleanup and more. Plus backups and mass rename.
 - **Server Activity**: a Tautulli-style live view of streams, history and stats.
-- **Movie night** in chat: vote on a title and watch together.
+- **Watch Together** in chat: vote on a title and watch together.
 
 **YouTube**
 - Follow channels and playlists as TV shows, with no API key.
@@ -367,7 +375,7 @@ Soulseek rooms and private messages through slskd, in a Discord-style layout.
 - `/np`, `/want`, `/poll` and friends.
 - **Room activities**:
   - A shared YouTube **jukebox** with voting.
-  - **Movie night**, polls and trivia.
+  - **Watch Together**, polls and trivia.
 - **Arcade**: chess, Connect 4, Battleship, Othello and Gomoku, plus a slot machine.
   - Everyone's client computes the same game state from the room messages, so no game server is needed.
   - Room-vs-player voting, and commit-reveal boards so nobody can cheat.
