@@ -27,11 +27,12 @@ merged, and the household runs the stock image.
 
 ## Upstream first
 
-Anything here belongs upstream and goes there rather than living in this fork. Twenty-five
+Anything here belongs upstream and goes there rather than living in this fork. Twenty-six
 PRs have merged so far, one is open.
 
 Merged:
 
+- [#1803](https://github.com/Nezreka/SoulSync/pull/1803) a dead-file finding closes when its track is gone or its file is back, and Fix refuses one whose file exists ([#1802](https://github.com/Nezreka/SoulSync/issues/1802)), in 3.5.9
 - [#1762](https://github.com/Nezreka/SoulSync/pull/1762) the watchlist add from a source artist page sends its source, so View Discography opens the right artist ([#1761](https://github.com/Nezreka/SoulSync/issues/1761)), in 3.5.8
 - [#1760](https://github.com/Nezreka/SoulSync/pull/1760), [#1759](https://github.com/Nezreka/SoulSync/pull/1759), [#1758](https://github.com/Nezreka/SoulSync/pull/1758), [#1757](https://github.com/Nezreka/SoulSync/pull/1757), [#1752](https://github.com/Nezreka/SoulSync/pull/1752), [#1751](https://github.com/Nezreka/SoulSync/pull/1751), [#1750](https://github.com/Nezreka/SoulSync/pull/1750) media servers described once and read from that description: a descriptor per server, one item model, declared capabilities and hooks, per-profile client resolution, artwork and the setup wizard, in 3.5.8
 - [#1708](https://github.com/Nezreka/SoulSync/pull/1708) an opt-in memory of empty lookups for the Cover Art Filler
