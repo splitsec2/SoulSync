@@ -443,6 +443,14 @@ class MusicAssistantClient(MediaServerBase):
             self._source_folder = folder
         return folder
 
+    def get_music_library_locations(self) -> List[str]:
+        """The selected source's folder, as Music Assistant sees it, for the
+        callers that need the library's roots (a library delete counts a
+        file under it as inside the library). The server path mapping turns
+        it into SoulSync's view. Empty without a source or a folder."""
+        folder = self.source_folder()
+        return [folder] if folder else []
+
     def resolve_path(self, mapping: Optional[Dict[str, Any]]) -> Optional[str]:
         """Absolute path on the Music Assistant host for a file-source
         mapping, or None (no mapping, a cue sub-track, no folder)."""

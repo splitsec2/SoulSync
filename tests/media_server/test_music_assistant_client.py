@@ -360,3 +360,18 @@ def test_scan_hints_and_wrappers_report_the_server(client):
     assert client.get_cache_stats()['artists_cached'] == 1
     client.clear_cache()
     assert client.get_cache_stats()['artists_cached'] == 0
+
+
+def test_library_locations_are_the_source_folder(client):
+    """A library delete counts a file under the source folder as inside the library."""
+    assert client.get_music_library_locations() == ['/media/music']
+
+
+def test_library_locations_use_the_folder_setting_on_2_10_9(client, monkeypatch):
+    _ma_2_10_9(client, monkeypatch, '/media/music')
+    assert client.get_music_library_locations() == ['/media/music']
+
+
+def test_no_folder_means_no_library_locations(client, monkeypatch):
+    _ma_2_10_9(client, monkeypatch, '')
+    assert client.get_music_library_locations() == []
