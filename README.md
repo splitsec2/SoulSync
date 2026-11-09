@@ -1,3 +1,72 @@
+> [!IMPORTANT]
+> **This is a fork of [Nezreka/SoulSync](https://github.com/Nezreka/SoulSync).**
+> Everything below this block is upstream's own README, unchanged. If you are not me, you
+> almost certainly want [the upstream image](https://github.com/Nezreka/SoulSync).
+> This fork exists to run one household's music pipeline. It carries only dependency updates right now.
+
+## What this fork adds
+
+No feature changes. A change is built here first, sent upstream, and carried until a
+release includes it. The Origin column says where each one stands. Every change so far has
+merged, and the household runs the stock image.
+
+### What it carries now
+
+| Change | Origin |
+|---|---|
+| Dependency updates: a pip group of 3 packages and an npm group of 8 | Dependabot on this fork ([#3](https://github.com/splitsec2/SoulSync/pull/3), [#4](https://github.com/splitsec2/SoulSync/pull/4)), fork only, not sent upstream |
+
+### History of what this fork carried
+
+| Change | Origin |
+|---|---|
+| AcoustID scanner: opt-in `skip_verified` setting. Verified tracks are skipped unless the file changed since the last clean pass of the whole library. Off by default | This fork, merged upstream as [#1694](https://github.com/Nezreka/SoulSync/pull/1694), in 3.5.5 |
+| API keys get a scope, `read` or `admin`. Read keys can only GET a named set of `/api/v1` routes, and a test walks every GET route to catch ones that write. Keys without a scope stay admin | This fork, merged upstream as [#1695](https://github.com/Nezreka/SoulSync/pull/1695), in 3.5.5, from [#1586](https://github.com/Nezreka/SoulSync/issues/1586) |
+| A repair run cut short by the worker stopping is recorded as stopped, not completed | This fork, merged upstream as [#1707](https://github.com/Nezreka/SoulSync/pull/1707), in 3.5.5 |
+| Cover Art Filler: opt-in memory of empty lookups, so an album no source has art for is not searched every run. Throttles and outages are never remembered | This fork, merged upstream as [#1708](https://github.com/Nezreka/SoulSync/pull/1708), in 3.5.5 |
+
+## Upstream first
+
+Anything here belongs upstream and goes there rather than living in this fork. Twenty-six
+PRs have merged so far, one is open. One more change went in as commits: the maintainer took the connection
+pool from an issue and kept the authorship.
+
+Merged:
+
+- [#1847](https://github.com/Nezreka/SoulSync/issues/1847) database calls reuse SQLite connections from a small shared pool, so the schema is not parsed and the -wal and -shm are not recreated on every call. Taken from the issue with both commits, in 3.6.0. `SOULSYNC_DB_POOL=0` turns it off
+- [#1803](https://github.com/Nezreka/SoulSync/pull/1803) a dead-file finding closes when its track is gone or its file is back, and Fix refuses one whose file exists ([#1802](https://github.com/Nezreka/SoulSync/issues/1802)), in 3.5.9
+- [#1762](https://github.com/Nezreka/SoulSync/pull/1762) the watchlist add from a source artist page sends its source, so View Discography opens the right artist ([#1761](https://github.com/Nezreka/SoulSync/issues/1761)), in 3.5.8
+- [#1760](https://github.com/Nezreka/SoulSync/pull/1760), [#1759](https://github.com/Nezreka/SoulSync/pull/1759), [#1758](https://github.com/Nezreka/SoulSync/pull/1758), [#1757](https://github.com/Nezreka/SoulSync/pull/1757), [#1752](https://github.com/Nezreka/SoulSync/pull/1752), [#1751](https://github.com/Nezreka/SoulSync/pull/1751), [#1750](https://github.com/Nezreka/SoulSync/pull/1750) media servers described once and read from that description: a descriptor per server, one item model, declared capabilities and hooks, per-profile client resolution, artwork and the setup wizard, in 3.5.8
+- [#1708](https://github.com/Nezreka/SoulSync/pull/1708) an opt-in memory of empty lookups for the Cover Art Filler
+- [#1707](https://github.com/Nezreka/SoulSync/pull/1707) a repair run cut short by the worker stopping is recorded as stopped, not completed
+- [#1695](https://github.com/Nezreka/SoulSync/pull/1695) read-only API keys
+- [#1694](https://github.com/Nezreka/SoulSync/pull/1694) AcoustID `skip_verified`
+- [#1676](https://github.com/Nezreka/SoulSync/pull/1676) an API key can manage invites when login mode is on
+- [#1657](https://github.com/Nezreka/SoulSync/pull/1657) a failed Spotify playlist fetch no longer refreshes a mirror to empty
+- [#1597](https://github.com/Nezreka/SoulSync/pull/1597) one implementation behind both API key route sets
+- [#1587](https://github.com/Nezreka/SoulSync/pull/1587) one way to read and match an API key, and `X-API-Key` accepted
+- [#1534](https://github.com/Nezreka/SoulSync/pull/1534), [#1533](https://github.com/Nezreka/SoulSync/pull/1533), [#1527](https://github.com/Nezreka/SoulSync/pull/1527) build: webui builder on the build platform, apt packages and Deno before the venv copy, tests and docs kept out of the image
+- [#1526](https://github.com/Nezreka/SoulSync/pull/1526), [#1525](https://github.com/Nezreka/SoulSync/pull/1525), [#1523](https://github.com/Nezreka/SoulSync/pull/1523) CI: cancel superseded runs, `pytest -n auto`, a temp database per xdist worker
+- [#1524](https://github.com/Nezreka/SoulSync/pull/1524), [#1501](https://github.com/Nezreka/SoulSync/pull/1501) slskd cleanup scoped to this client's own transfers and searches
+- [#1282](https://github.com/Nezreka/SoulSync/pull/1282) the commit SHA moved below the heavy runtime layers
+
+Open:
+
+- [#1787](https://github.com/Nezreka/SoulSync/pull/1787) Music Assistant as a fifth media server ([#1050](https://github.com/Nezreka/SoulSync/issues/1050))
+
+## How it is maintained
+
+There is no fork-only branch stack. Each change is its own branch off upstream `dev`, sent as
+a PR. While one is open, a local branch is the latest upstream release plus the open PRs,
+cherry-picked, and the image is a thin overlay on the stock one (`FROM` the release image plus
+the files the PRs change), built on the host that runs it and not published anywhere.
+Rollback is the stock image. That overlay ran from 2026-10-13 to 2026-10-15 and is gone now
+that 3.5.5 contains all four PRs.
+
+Licence and copyright are upstream's, unchanged.
+
+---
+
 <p align="center">
   <img src="./assets/trans.png" alt="SoulSync" width="420">
 </p>
