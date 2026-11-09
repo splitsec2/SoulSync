@@ -14,7 +14,7 @@ merged, and the household runs the stock image.
 
 | Change | Origin |
 |---|---|
-| Dependency updates: a pip group of 3 packages and an npm group of 8 | Dependabot on this fork ([#3](https://github.com/splitsec2/SoulSync/pull/3), [#4](https://github.com/splitsec2/SoulSync/pull/4)), fork only, not sent upstream |
+| Dependency updates ahead of upstream: aiohttp, cryptography and Pillow, and oxfmt and vitest in the web UI. The other npm updates in that group went back to upstream's lockfile in an earlier sync | Dependabot on this fork ([#3](https://github.com/splitsec2/SoulSync/pull/3), [#4](https://github.com/splitsec2/SoulSync/pull/4)), fork only, not sent upstream |
 
 ### History of what this fork carried
 
@@ -27,12 +27,13 @@ merged, and the household runs the stock image.
 
 ## Upstream first
 
-Anything here belongs upstream and goes there rather than living in this fork. Twenty-six
-PRs have merged so far, one is open. One more change went in as commits: the maintainer took the connection
+Anything here belongs upstream and goes there rather than living in this fork. Twenty-seven
+PRs have merged so far, none are open. One more change went in as commits: the maintainer took the connection
 pool from an issue and kept the authorship.
 
 Merged:
 
+- [#1936](https://github.com/Nezreka/SoulSync/pull/1936) Music Assistant as a fifth media server ([#1050](https://github.com/Nezreka/SoulSync/issues/1050)), in 3.6.2. Resubmitted after the first version, [#1787](https://github.com/Nezreka/SoulSync/pull/1787), went into `dev` by accident with Library v2 and was reverted
 - [#1847](https://github.com/Nezreka/SoulSync/issues/1847) database calls reuse SQLite connections from a small shared pool, so the schema is not parsed and the -wal and -shm are not recreated on every call. Taken from the issue with both commits, in 3.6.0. `SOULSYNC_DB_POOL=0` turns it off
 - [#1803](https://github.com/Nezreka/SoulSync/pull/1803) a dead-file finding closes when its track is gone or its file is back, and Fix refuses one whose file exists ([#1802](https://github.com/Nezreka/SoulSync/issues/1802)), in 3.5.9
 - [#1762](https://github.com/Nezreka/SoulSync/pull/1762) the watchlist add from a source artist page sends its source, so View Discography opens the right artist ([#1761](https://github.com/Nezreka/SoulSync/issues/1761)), in 3.5.8
@@ -49,10 +50,6 @@ Merged:
 - [#1526](https://github.com/Nezreka/SoulSync/pull/1526), [#1525](https://github.com/Nezreka/SoulSync/pull/1525), [#1523](https://github.com/Nezreka/SoulSync/pull/1523) CI: cancel superseded runs, `pytest -n auto`, a temp database per xdist worker
 - [#1524](https://github.com/Nezreka/SoulSync/pull/1524), [#1501](https://github.com/Nezreka/SoulSync/pull/1501) slskd cleanup scoped to this client's own transfers and searches
 - [#1282](https://github.com/Nezreka/SoulSync/pull/1282) the commit SHA moved below the heavy runtime layers
-
-Open:
-
-- [#1787](https://github.com/Nezreka/SoulSync/pull/1787) Music Assistant as a fifth media server ([#1050](https://github.com/Nezreka/SoulSync/issues/1050))
 
 ## How it is maintained
 
