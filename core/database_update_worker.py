@@ -1627,12 +1627,28 @@ class DatabaseUpdateWorker:
                 return self._get_recent_albums_jellyfin()
             elif self.server_type == "navidrome":
                 return self._get_recent_albums_navidrome()
+            elif self._declares_recently_added():
+                return self._get_recent_albums_declared()
             else:
                 logger.error(f"Unknown server type: {self.server_type}")
                 return []
         except Exception as e:
             logger.error(f"Error getting recent albums for {self.server_type}: {e}")
             return []
+
+    def _declares_recently_added(self) -> bool:
+        """Whether the client declares RECENTLY_ADDED, so a server without a
+        branch above (Music Assistant, or the next one) still gets an
+        incremental scan instead of an empty one."""
+        from core.media_server.contract import Capability
+        supports = getattr(self.media_client, 'supports', None)
+        return callable(supports) and bool(supports(Capability.RECENTLY_ADDED))
+
+    def _get_recent_albums_declared(self) -> List:
+        """Recently added albums through the declared contract method."""
+        recent_albums = self.media_client.get_recently_added_albums(400) or []
+        logger.info(f"Found {len(recent_albums)} recently added albums from {self.server_type}")
+        return list(recent_albums)
     
     def _get_recent_albums_plex(self) -> List:
         """Get recently added and updated albums from Plex.
